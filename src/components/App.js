@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 
 import Filters from "./Filters";
 import PetBrowser from "./PetBrowser";
@@ -6,6 +6,31 @@ import PetBrowser from "./PetBrowser";
 function App() {
   const [pets, setPets] = useState([]);
   const [filters, setFilters] = useState({ type: "all" });
+
+  const handleFetchingOfPetsByType = () => {
+    if (filters.type === "all") {
+      fetch(`http://localhost:3001/pets`)
+        .then((r) => r.json())
+        .then((data) => setPets(data))
+        .catch((err) => console.log(err))
+    }
+    else {
+      fetch(`http://localhost:3001/pets?type=${filters.type}`)
+        .then((r) => r.json())
+        .then((data) => setPets(data))
+        .catch((err) => console.log(err))  
+    }
+  }
+  // console.log(pets);
+
+  useEffect(() => {
+    handleFetchingOfPetsByType()
+  }, [filters.type])
+
+  const handleFilterChange = (type) => {
+    setFilters((previousFilter) => ({...previousFilter, type}))
+  }
+
 
   return (
     <div className="ui container">
@@ -15,10 +40,10 @@ function App() {
       <div className="ui container">
         <div className="ui grid">
           <div className="four wide column">
-            <Filters />
+            <Filters onChangeType={handleFilterChange} onFindPetsClick={handleFetchingOfPetsByType} />
           </div>
           <div className="twelve wide column">
-            <PetBrowser />
+            <PetBrowser pet={pets} />
           </div>
         </div>
       </div>

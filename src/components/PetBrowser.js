@@ -1,9 +1,19 @@
 import React from "react";
+import Pet from './Pet';
 
-import Pet from "./Pet";
+function PetBrowser( {pet} ) {
+  const petsDisplayed = pet.map((p) => {
+    return (
+        <Pet key={p.id} pet={p} />
+    )
+  })
+  // console.log(pet);
 
-function PetBrowser() {
-  return <div className="ui cards">PET COMPONENT SHOULD GO HERE</div>;
+  return (
+    <div className="ui cards">
+      {petsDisplayed}
+    </div>
+  );
 }
 
 export default PetBrowser;
